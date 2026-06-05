@@ -2,14 +2,10 @@ export class Category {
     constructor(
         public readonly id: string,
         public readonly name: string,
-        public readonly createdAt: Date,
+        public readonly slug: string,
     ) {}
 
-    static create(data: {
-        id: string
-        name: string
-        createdAt: Date
-    }): Category {
-        return new Category(data.id, data.name, data.createdAt)
+    static create(data: { id: string; name: string; slug: string }): Category {
+        return new Category(data.id, data.name, data.slug)
     }
 }

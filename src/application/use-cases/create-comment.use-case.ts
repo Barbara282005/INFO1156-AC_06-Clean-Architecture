@@ -13,7 +13,7 @@ import {
     IPostRepository,
     POST_REPOSITORY,
 } from "@/domain/repositories/post.repository.interface"
-import { ModerateContentUseCase } from "./moderate-content.use-case"
+import { ModerateContentUseCase } from "@/application/use-cases/moderate-content.use-case"
 import { CreateCommentDto } from "@/comments/dtos/create-comment.dto"
 
 @Injectable()
