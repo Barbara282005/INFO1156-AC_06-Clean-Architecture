@@ -1,20 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { ILikeRepository } from '../../domain/repositories/like.repository.interface';
+import { Injectable } from "@nestjs/common"
+import { Like } from "@/domain/entities/like.entity"
+import {
+    CreateLikeData,
+    ILikeRepository,
+} from "@/domain/repositories/like.repository.interface"
+import { PrismaService } from "@/shared/prisma.service"
 
 @Injectable()
 export class PrismaLikeRepository implements ILikeRepository {
-  constructor(private readonly prisma: PrismaService) {}
+    constructor(private readonly prisma: PrismaService) {}
 
-  async toggleLike(postId: string, userId: string) {
-    const existing = await this.prisma.like.findUnique({
-      where: { userId_postId: { userId, postId } }
-    });
-    if (existing) {
-      await this.prisma.like.delete({ where: { userId_postId: { userId, postId } } });
-      return { liked: false };
+    async create(data: CreateLikeData): Promise<Like> {
+        const record = await this.prisma.like.create({ data })
+        return Like.create(record)
     }
-    await this.prisma.like.create({ data: { postId, userId } });
-    return { liked: true };
-  }
 }
