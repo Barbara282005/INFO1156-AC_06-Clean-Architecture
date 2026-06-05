@@ -1,11 +1,7 @@
 import { Injectable } from "@nestjs/common"
+import { FeedPost } from "@/domain/repositories/post.repository.interface"
 
-export type FeedPost = {
-    createdAt: Date
-    likesCount: number
-    commentsCount: number
-    relevanceScore: number
-}
+export type { FeedPost }
 
 export type FeedMode = "latest" | "mostLiked" | "mostCommented" | "relevance"
 
@@ -47,18 +43,9 @@ export class FeedRankingStrategyFactory {
     private readonly relevance = new RelevanceRankingStrategy()
 
     forMode(mode: string): FeedRankingStrategy {
-        if (mode === "mostLiked") {
-            return this.mostLiked
-        }
-
-        if (mode === "mostCommented") {
-            return this.mostCommented
-        }
-
-        if (mode === "relevance") {
-            return this.relevance
-        }
-
+        if (mode === "mostLiked") return this.mostLiked
+        if (mode === "mostCommented") return this.mostCommented
+        if (mode === "relevance") return this.relevance
         return this.latest
     }
 }

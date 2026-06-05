@@ -1,0 +1,5 @@
+export * from "./prisma-post.repository"
+export * from "./prisma-comment.repository"
+export * from "./prisma-like.repository"
+export * from "./prisma-category.repository"
+export * from "./prisma-moderation.repository"

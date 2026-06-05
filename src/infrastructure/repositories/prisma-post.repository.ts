@@ -1,26 +1,35 @@
 import { Injectable } from "@nestjs/common"
+import { Post } from "@/domain/entities/post.entity"
+import {
+    CreatePostData,
+    FeedPost,
+    IPostRepository,
+} from "@/domain/repositories/post.repository.interface"
 import { PrismaService } from "@/shared/prisma.service"
-import { CreatePostDto } from "@/posts/dtos/posts.dtos"
 
 @Injectable()
-export class PostsService {
+export class PrismaPostRepository implements IPostRepository {
     constructor(private readonly prisma: PrismaService) {}
 
-    async create(data: CreatePostDto) {
-        return await this.prisma.post.create({ data })
+    async create(data: CreatePostData): Promise<Post> {
+        const record = await this.prisma.post.create({ data })
+        return Post.create(record)
     }
 
-    findAll() {
-        return this.prisma.post.findMany({
+    async findAll(): Promise<Post[]> {
+        const records = await this.prisma.post.findMany({
             orderBy: { createdAt: "desc" },
         })
+        return records.map((r) => Post.create(r))
     }
 
-    findById(id: string) {
-        return this.prisma.post.findUnique({ where: { id } })
+    async findById(id: string): Promise<Post | null> {
+        const record = await this.prisma.post.findUnique({ where: { id } })
+        if (!record) return null
+        return Post.create(record)
     }
 
-    async getFeedPosts(categoryId?: string) {
+    async getFeedPosts(categoryId?: string): Promise<FeedPost[]> {
         const posts = await this.prisma.post.findMany({
             where: categoryId ? { categoryId } : undefined,
             include: { comments: true, likes: true, category: true },
